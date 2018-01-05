@@ -17,7 +17,7 @@ public class Server {
 		Socket clientSocket = null;
 		
 		BufferedReader in= null;		//buffer ingresso server
-		//BufferedReader stdIn = null;	//buffer tastiera
+		BufferedReader stdIn = null;	//buffer tastiera
 		PrintWriter out = null;			//buffer output client
 		
 		try {
@@ -31,28 +31,34 @@ public class Server {
 			// creazione stream (canale) di input dal clientSocket
 			InputStreamReader isr = new InputStreamReader(clientSocket.getInputStream());
 			in = new BufferedReader(isr);
+			String clientInput = null;
 			
 			// creazione stream (canale) di output al clientSocket
 			OutputStreamWriter osw = new OutputStreamWriter(clientSocket.getOutputStream());
 			BufferedWriter bw = new BufferedWriter(osw);
 			out = new PrintWriter(bw, true);
+			
+			// creazione stream di input da tastiera
+			stdIn = new BufferedReader(new InputStreamReader(System.in));
+			String userInput;
 
 			System.out.println("Canale di I/O creato");
 			System.out.println("E' ora possibile comunicare con il client\n");
 			
 			//ciclo di ricezione/trasmissione con il client
 			while (true) {
-				//leggo i messaggi inviati dal client
-				String str = in.readLine();
+				clientInput = in.readLine();
+				//stampo a schermo il messaggio ricevuto dal client
+				System.out.println("Client: " + clientInput);
 				
-				if (str.equals("END"))	//se la stringa del client è "END"
-					break;				//interrompo il ciclo di comunicazione
+				//controllo la richiesta d'arresto
+				if (clientInput.equals("ESCI"))	//se la stringa del client è "ESCI"
+					break;						//interrompo il ciclo di comunicazione
 				
-				//stampo a schermo il messaggio ricevuto e indico la risposta
-				System.out.println("Il client scrive: " + str);
-				System.out.println("Server: rispondo con -> " + str);
-				//rispondo al client con il suo stesso messaggio
-				out.println(str);
+				//leggo una stringa da tastiera
+				userInput = stdIn.readLine();
+				//inoltro la stringa al client
+				out.println(userInput);
 			}
 		}
 		catch (IOException e) {
@@ -65,6 +71,7 @@ public class Server {
 		System.out.println("Server: Arresto in corso...");
 		out.close();
 		in.close();
+		stdIn.close();
 		clientSocket.close();
 		serverSocket.close();
 		System.out.println("Server: Arresto completato");
