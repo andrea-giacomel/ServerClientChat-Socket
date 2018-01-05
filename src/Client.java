@@ -24,7 +24,7 @@ public class Client {
 			// creazione stream di input da socket
 			InputStreamReader isr = new InputStreamReader( socket.getInputStream());
 			in = new BufferedReader(isr);
-			String serverInput = null;
+			String serverInput = "";
 			
 			// creazione stream di output su socket
 			OutputStreamWriter osw = new OutputStreamWriter( socket.getOutputStream());
@@ -33,26 +33,32 @@ public class Client {
 			
 			// creazione stream di input da tastiera
 			stdIn = new BufferedReader(new InputStreamReader(System.in));
-			String userInput = null;
+			String userInput = "";
 			
 			System.out.println("Canale di I/O creato");
 			System.out.println("E' ora comunicare con il server.\n");
 			
 			//ciclo di ricezione/trasmissione con il server
 			while (true){
-				//leggo una stringa da tastiera
-				userInput = stdIn.readLine();
-				//inoltro la stringa al server
-				out.println(userInput);
+				//se c'e' una stringa pronta da leggere nel buffer del server
+				if( in.ready() ) {
+					//leggo i messaggi inviati dal server
+					serverInput = in.readLine();
+					//stampo a schermo il messaggio ricevuto dal server
+					System.out.println("Server: " + serverInput);
+				}
+				
+				//se c'e' una stringa nel buffer della tastiera
+				if( stdIn.ready() ) {
+					//leggo una stringa da tastiera
+					userInput = stdIn.readLine();
+					//inoltro la stringa al server
+					out.println(userInput);
+				}
 				
 				//controllo la richiesta d'arresto
 				if (userInput.equals("ESCI"))	//se la stringa da tastiera è "ESCI"
-					break;						//interrompo il ciclo di comunicazione
-				
-				//leggo i messaggi inviati dal server
-				serverInput = in.readLine();
-				//stampo a schermo il messaggio ricevuto dal server
-				System.out.println("Server: " + serverInput);
+					break;						//interrompo il ciclo di comunicazione				
 			}
 		}
 		catch (UnknownHostException e) {
