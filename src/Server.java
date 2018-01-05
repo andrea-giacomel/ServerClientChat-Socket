@@ -16,8 +16,9 @@ public class Server {
 		//inizializzo il socket per il cilent
 		Socket clientSocket = null;
 		
-		BufferedReader in = null;
-		PrintWriter out = null;
+		BufferedReader in= null;		//buffer ingresso server
+		//BufferedReader stdIn = null;	//buffer tastiera
+		PrintWriter out = null;			//buffer output client
 		
 		try {
 			System.out.println("Server: Sono in attesa di un client");

@@ -10,9 +10,11 @@ public class Client {
 		//indirizzo del server
 		InetAddress addr = InetAddress.getByName(null);	//server sullo stesso pc
 		
-		Socket socket=null;
-		BufferedReader in=null, stdIn=null;
-		PrintWriter out=null;
+		Socket socket=null;				//socket
+		
+		BufferedReader in= null;		//buffer ingresso server
+		BufferedReader stdIn = null;	//buffer tastiera
+		PrintWriter out = null;			//buffer output client
 		
 		try {
 			// creazione socket
